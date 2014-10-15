@@ -1,0 +1,30 @@
+{
+  "name": "ampache",
+  "description": "Installs ampache",
+  "long_description": "A web based audio/video streaming application and file manager allowing you to access your music & videos from anywhere, using almost any internet enabled device.",
+  "maintainer": "Kyel Woodard",
+  "maintainer_email": "CaptSpify@Yahoo.com",
+  "platforms": {
+    "debian": [
+    ]
+  },
+  "dependencies": {
+  },
+  "recommendations": {
+  },
+  "suggestions": {
+  },
+  "conflicting": {
+  },
+  "providing": {
+  },
+  "replacing": {
+  },
+  "attributes": {
+  },
+  "groupings": {
+  },
+  "recipes": {
+  },
+  "version": "0.1.0"
+}
