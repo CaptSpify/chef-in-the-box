@@ -1,0 +1,78 @@
+# Dropped off by chef
+NameVirtualHost *:443
+
+<% @https_subs.each do |sub| -%>
+<VirtualHost *:443>
+  ServerAdmin <%= @serveradmin %>
+  ServerName <%= sub %>.<%= @domain %>
+
+  ErrorLog "/var/log/apache2/<%= sub %>_error_log"
+  CustomLog "/var/log/apache2/<%= sub %>_access_log" common
+
+  SSLEngine on
+  SSLProxyEngine On
+  SSLCertificateFile /etc/apache2/ssl/example.crt
+  SSLCertificateKeyFile /etc/apache2/ssl/example.key
+  SSLCertificateChainFile /etc/apache2/ssl/example.ca-bundle
+
+  ProxyRequests Off
+  ProxyPreserveHost On
+
+  Alias / "/var/packages/"
+  <Directory "/var/packages">
+    Options Indexes FollowSymLinks MultiViews
+    DirectoryIndex index.html
+    AllowOverride Options
+    Order allow,deny
+    allow from all
+  </Directory>
+  <Directory "/var/packages/*/conf">
+    Order allow,deny
+    Deny from all
+    Satisfy all
+  </Directory>
+  <Directory "/var/packages/*/db">
+    Order allow,deny
+    Deny from all
+    Satisfy all
+  </Directory>        
+
+</VirtualHost>
+
+<% end -%>
+
+NameVirtualHost *:80
+
+<% @http_subs.each do |sub| -%>
+<VirtualHost *:80>
+  ServerAdmin <%= @serveradmin %>
+  ServerName <%= sub %>.<%= @domain %>
+
+  ErrorLog "/var/log/apache2/<%= sub %>_error_log"
+  CustomLog "/var/log/apache2/<%= sub %>_access_log" common
+
+  ProxyRequests Off
+  ProxyPreserveHost On
+
+  Alias / "/var/packages/"
+  <Directory "/var/packages">
+    Options Indexes FollowSymLinks MultiViews
+    DirectoryIndex index.html
+    AllowOverride Options
+    Order allow,deny
+    allow from all
+  </Directory>
+  <Directory "/var/packages/*/conf">
+    Order allow,deny
+    Deny from all
+    Satisfy all
+  </Directory>
+  <Directory "/var/packages/*/db">
+    Order allow,deny
+    Deny from all
+    Satisfy all
+  </Directory>        
+
+</VirtualHost>
+
+<% end -%>

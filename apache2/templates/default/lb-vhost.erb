@@ -1,0 +1,46 @@
+# The front-end balancer to pass back and forth between my subdomains
+# Dropped off by chef
+NameVirtualHost *:443
+
+<% @https_subs.each do |sub| -%>
+<VirtualHost *:443>
+  ServerAdmin <%= @serveradmin %>
+  ServerName <%= sub %>.<%= @domain %>
+
+  ProxyPass / https://<%= sub %>.<%= @domain %>/
+  ProxyPassReverse / https://<%= sub %>.<%= @domain %>/
+
+  ErrorLog "/var/log/apache2/<%= sub %>_error_log"
+  CustomLog "/var/log/apache2/<%= sub %>_access_log" common
+
+  SSLEngine on
+  SSLProxyEngine On
+  SSLCertificateFile /etc/apache2/ssl/example.crt
+  SSLCertificateKeyFile /etc/apache2/ssl/example.key
+  SSLCertificateChainFile /etc/apache2/ssl/example.ca-bundle
+
+  ProxyRequests Off
+  ProxyPreserveHost On
+</VirtualHost>
+
+<% end -%>
+
+NameVirtualHost *:80
+
+<% @http_subs.each do |sub| -%>
+<VirtualHost *:80>
+  ServerAdmin <%= @serveradmin %>
+  ServerName <%= sub %>.<%= @domain %>
+
+  ProxyPass / http://<%= sub %>.<%= @domain %>/
+  ProxyPassReverse / http://<%= sub %>.<%= @domain %>/
+
+  ErrorLog "/var/log/apache2/<%= sub %>_error_log"
+  CustomLog "/var/log/apache2/<%= sub %>_access_log" common
+
+  ProxyRequests Off
+  ProxyPreserveHost On
+
+</VirtualHost>
+
+<% end -%>
