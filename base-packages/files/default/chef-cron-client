@@ -1,0 +1,3 @@
+SHELL=/bin/bash
+# There is a little bit of potato here from when I was trying to test some things out. Once I got it working, I never bothered to clean it up. deal_with_it.gif
+*/15 * * * * root (/bin/sleep $((RANDOM\%300))) && /usr/bin/flock -x -n /tmp/.chef.lock -c "/usr/bin/chef-client --once 2>&1 >> /var/log/chef/client.log"; rm /tmp/.chef.lock 2>/dev/null

@@ -1,0 +1,8 @@
+# default
+deb http://mirrordirector.raspbian.org/raspbian/ wheezy main contrib non-free rpi
+
+# raspi
+deb http://archive.raspberrypi.org/debian/ wheezy main
+
+# collabora
+deb http://raspberrypi.collabora.com wheezy rpi

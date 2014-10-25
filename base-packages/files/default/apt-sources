@@ -1,0 +1,22 @@
+# example.com
+deb http://repository.example.com/debian/ wheezy non-free
+
+# Debian
+deb http://mirrors.rit.edu/debian/ wheezy main
+deb-src http://mirrors.rit.edu/debian/ wheezy main
+
+# Security
+deb http://security.debian.org/ wheezy/updates main
+deb-src http://security.debian.org/ wheezy/updates main
+
+# wheezy-updates, previously known as 'volatile'
+deb http://mirrors.rit.edu/debian/ wheezy-updates main contrib non-free
+deb-src http://mirrors.rit.edu/debian/ wheezy-updates main contrib non-free
+
+# backports
+deb http://mirrors.rit.edu/debian/ wheezy-backports main
+deb-src http://mirrors.rit.edu/debian/ wheezy-backports main
+
+# multimedia
+deb http://mirror.csclub.uwaterloo.ca/debian-multimedia/ wheezy main
+deb-src http://mirror.csclub.uwaterloo.ca/debian-multimedia/ wheezy main
