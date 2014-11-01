@@ -1,0 +1,1 @@
+0 0 1 * * root /usr/sbin/chef-backup >> /var/log/chef/backup.log

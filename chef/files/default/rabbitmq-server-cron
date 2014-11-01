@@ -1,0 +1,1 @@
+* * * * * root if [ -z "$(/etc/init.d/rabbitmq-server status | grep uptime)" ]; then /etc/init.d/rabbitmq-server start; fi | logger -t "rabitmq-balls"

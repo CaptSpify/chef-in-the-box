@@ -1,0 +1,3 @@
+#!/bin/bash
+date=`date +%Y.%m.%d.%H.%M`
+tar -czf /mnt/Backups/Chef/chef-server.$date.tgz /var/lib/chef /etc/chef /etc/couchdb /var/lib/couchdb
