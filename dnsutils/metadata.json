@@ -1,0 +1,28 @@
+{
+  "name": "dnsutils",
+  "description": "Installs dnsutils",
+  "platforms": {
+    "debian": [
+    ]
+  },
+  "dependencies": {
+  },
+  "recommendations": {
+  },
+  "suggestions": {
+  },
+  "conflicting": {
+  },
+  "providing": {
+  },
+  "replacing": {
+  },
+  "attributes": {
+  },
+  "groupings": {
+  },
+  "recipes": {
+    "dnsutils": "Installs dnsutils"
+  },
+  "version": "0.1.0"
+}

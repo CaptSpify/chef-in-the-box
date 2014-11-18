@@ -1,0 +1,30 @@
+{
+  "name": "cifs-utils",
+  "description": "Installs cifs-utils",
+  "maintainer": "Kyel Woodard",
+  "maintainer_email": "CaptSpify@Yahoo.com",
+  "platforms": {
+    "debian": [
+    ]
+  },
+  "dependencies": {
+  },
+  "recommendations": {
+  },
+  "suggestions": {
+  },
+  "conflicting": {
+  },
+  "providing": {
+  },
+  "replacing": {
+  },
+  "attributes": {
+  },
+  "groupings": {
+  },
+  "recipes": {
+    "cifs-utils": "Installs cifs-utils"
+  },
+  "version": "0.1.0"
+}
