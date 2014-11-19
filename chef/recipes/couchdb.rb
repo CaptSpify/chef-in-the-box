@@ -2,10 +2,7 @@
 # Cookbook Name:: chef
 # Recipe:: default
 #
-# Copyright 2014, thekyel.com
-#
-# All rights reserved - Do Not Redistribute
-#
+
 service "couchdb" do
   service_name "couchdb"
   restart_command "/etc/init.d/couchdb restart && sleep 1"

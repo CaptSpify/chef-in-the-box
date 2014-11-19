@@ -1,0 +1,27 @@
+# This file describes the network interfaces available on your system
+# and how to activate them. For more information, see interfaces(5).
+
+# The loopback network interface
+auto lo
+iface lo inet loopback
+
+# The primary network interface
+auto <%= @INTERFACE %>
+iface <%= @INTERFACE %> inet <%= @IP %>
+  address <%= @ADDR %>
+  netmask <%= @NETMASK %>
+  network <%= @NETWORK %>
+  gateway <%= @GATEWAY %>
+  <% unless @BRIDGE_PORTS.nil? -%>
+  bridge_ports <%= @BRIDGE_PORTS %>
+  <% end -%>
+  <% unless @BRIDGE_STP.nil? -%>
+  bridge_stp <%= @BRIDGE_STP %>
+  <% end -%>
+  <% unless @BRIDGE_FD.nil? -%>
+  bridge_fd <%= @BRIDGE_FD %>
+  <% end -%>
+  <% unless @OFFLOAD.nil? -%>
+  OFFLOAD_ tx <%= @OFFLOAD %>
+  <% end -%>
+  dns-nameservers <%= @NAMESERVER %>
