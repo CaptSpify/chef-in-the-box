@@ -1,0 +1,31 @@
+{
+  "name": "molly-guard",
+  "description": "Installs molly-guard",
+  "long_description": "molly-guard attempts to prevent you from accidentally shutting down or rebooting machines. It does this by injecting a couple of checks before the existing commands: halt, reboot, shutdown, and poweroff. This happens via scripts with the same names in /usr/sbin, so it only works if you have /usr/sbin before /sbin in your PATH!",
+  "maintainer": "Kyel Woodard",
+  "maintainer_email": "CaptSpify@Yahoo.com",
+  "platforms": {
+    "debian": [
+    ]
+  },
+  "dependencies": {
+  },
+  "recommendations": {
+  },
+  "suggestions": {
+  },
+  "conflicting": {
+  },
+  "providing": {
+  },
+  "replacing": {
+  },
+  "attributes": {
+  },
+  "groupings": {
+  },
+  "recipes": {
+    "molly-guard": "Installs molly-guard"
+  },
+  "version": "0.1.0"
+}
