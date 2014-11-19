@@ -104,7 +104,7 @@ override_attributes(
     },
     :instances => {
       :vi_1 => {
-        :ip_addresses => '192.168.0.2',
+        :ip_addresses => '10.0.0.0',
         :interface => 'eth0',
         :state => 'MASTER',
         :states => {
