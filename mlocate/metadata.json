@@ -1,0 +1,30 @@
+{
+  "name": "mlocate",
+  "description": "Installs mlocate",
+  "maintainer": "Kyel Woodard",
+  "maintainer_email": "CaptSpify@Yahoo.com",
+  "platforms": {
+    "debian": [
+    ]
+  },
+  "dependencies": {
+  },
+  "recommendations": {
+  },
+  "suggestions": {
+  },
+  "conflicting": {
+  },
+  "providing": {
+  },
+  "replacing": {
+  },
+  "attributes": {
+  },
+  "groupings": {
+  },
+  "recipes": {
+    "mlocate": "Installs mlocate"
+  },
+  "version": "0.1.0"
+}
