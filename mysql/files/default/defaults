@@ -1,0 +1,4 @@
+[client]
+user=client
+pass=poop
+host=db1.example.com

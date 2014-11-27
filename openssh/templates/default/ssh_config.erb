@@ -1,0 +1,12 @@
+# This is the ssh client system-wide configuration file.  See
+# ssh_config(5) for more information.  This file provides defaults for
+# users, and the values can be changed in per-user configuration files
+# or on the command line.
+# This config is supplied by Chef
+
+Host *
+  SendEnv <%= node['ssh']['Send_Env'] %>
+  HashKnownHosts <%= node['ssh']['Hash_Known_Hosts'] %> 
+  ForwardAgent <%= node['ssh']['ForwardAgent'] %>   
+  KeepAlive <%= node['ssh']['KeepAlive'] %>
+  ServerAliveInterval <%= node['ssh']['ServerAliveInterval'] %> 
