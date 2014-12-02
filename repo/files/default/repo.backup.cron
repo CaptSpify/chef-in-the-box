@@ -1,0 +1,4 @@
+# Backups for repos
+SHELL=/bin/bash
+0 8 * * 1 root tar -czf /backup/dir/svn-server.$(date +%Y.%m.%d.%H.%M).tgz /dir/to/svn/
+30 8 * * 1 root tar -czf /backup/dir/git.$(date +%Y.%m.%d.%H.%M).tgz /dir/to/git

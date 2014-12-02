@@ -1,0 +1,6 @@
+Codename: wheezy
+Components: non-free
+Architectures: i386 amd64
+Origin: wheezy
+Version: 1.0
+Description: My Lab Repo
