@@ -1,0 +1,1 @@
+50 06 * * * root /usr/local/bin/syslog-email.sh 2>&1 | logger -t syslog-emails
