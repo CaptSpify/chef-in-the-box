@@ -1,0 +1,266 @@
+" create the needed files
+silent !mkdir ~/.vimtmp > /dev/null 2>&1
+silent !mkdir ~/.vim_undo > /dev/null 2>&1
+
+" Make command line two lines high
+set ch=2
+
+" Make backspace work normally
+set backspace=2
+
+" Hide the mouse when typing text
+set mousehide
+
+" Set backup directory for $file~ into my userdir
+set backup
+set backupdir=~/.vimtmp
+set directory=~/.vimtmp
+
+" Set how many columns tab moves when in Insert Mode
+set tabstop=2
+
+" Set how many columns >> moves
+set shiftwidth=2
+
+" Change ESC timeout
+set timeoutlen=1000 ttimeoutlen=0
+
+" Set SmartIndentation on
+set smartindent
+
+" Set how many columns Tab counts
+set tabstop=2
+
+" Use a visual bell instead of audible one
+set noerrorbells
+set visualbell
+
+" Manual Folding method
+if !exists("foldmethod")
+  set foldmethod=manual
+endif
+
+" Expand Tab (Not really sure what this does)
+set expandtab
+
+" Enable WildMenu (Tab-Completion for Vim commands)
+set wildmenu
+
+" Ignore Case when Searching
+set ignorecase
+
+" Remember where I was last
+if !exists("autocmd")
+  silent autocmd BufReadPost * normal `"
+endif
+
+" Set the Colorscheme
+if !exists("colorscheme")
+  colorscheme delek
+endif
+
+" Set default statusline colors
+function! SetColors()
+  hi User1 ctermbg=darkblue ctermfg=white
+  hi User2 ctermbg=yellow ctermfg=black
+  "hi User3 ctermbg=magenta ctermfg=black
+  hi User3 ctermbg=darkblue ctermfg=black
+  hi User4 ctermbg=darkgreen ctermfg=black
+  hi User5 ctermbg=red ctermfg=white
+endfunction
+
+" Show statusline
+set laststatus=2
+
+" Set default statusline format
+function! SetStatus(mode)
+  if a:mode == "Movement"
+    set statusline=%1*Name:%2*%f%3*\ \ %1*Type:%2*%Y%3*\ \ %1*Mode:%2*Move%3*\ \ %=\ \ %4*Col:%2*%v%3*\ \ %4*Row:%2*%l/%L%3*\ \ %1*%p%%
+  else
+    set statusline=%1*Name:%2*%f%3*\ \ %1*Type:%2*%Y%3*\ \ %1*Mode:%5*Insert%3*\ \ %=\ \ %4*Col:%2*%v%3*\ \ %4*Row:%2*%l/%L%3*\ \ %1*%p%%
+  endif
+endfunction
+
+:call SetStatus("Movement")
+
+" Change colors based on which mode we are in
+function! VarMode(mode)
+  if a:mode == 1
+      return 'Insert' 
+    else 
+      return 'Move' 
+  endif
+endfunction
+
+" Change statusline colors depending on mode
+if version >= 700
+  au InsertLeave * :call SetStatus("Movement")
+  au InsertEnter * :call SetStatus("Insert") 
+endif
+
+" Remove ruler and mode-list. I have them in the statusline
+set noruler
+set noshowmode
+
+" Remove annoying bottom line
+set cmdheight=1
+
+" Set word-separator to exclude periods
+set iskeyword=@,48-57,192-255
+set iskeyword-=_
+set iskeyword-=:
+
+" Highlighting strings inside C comments
+if !exists("let")
+  let c_comment_strings=1
+endif
+
+" Switch on syntax highlighting if it wasn't on yet.
+if !exists("syntax_on")
+  syntax on
+endif
+
+" Hardcode some filetypes because of awesome
+au BufRead,BufNewFile *.pp setfiletype conf
+au BufRead,BufNewFile *.json setfiletype json
+
+" Persistant undo
+if exists("undo_dir")
+  set undodir=~/.vim_undo
+  set undofile
+  set undolevels=1000 "maximum number of changes that can be undone
+  set undoreload=10000 "maximum number lines to save for undo on a buffer reload
+endif
+
+" Switch on search pattern highlighting.
+set hlsearch
+
+" Keep search results in the middle of the screen
+nnoremap <silent> n nzz
+nnoremap <silent> N Nzz
+nnoremap <silent> * *zz
+nnoremap <silent> # #zz
+nnoremap <silent> g* g*zz
+nnoremap <silent> g# g#zz
+
+" Allow Access to all Whitespace
+set virtualedit=all
+
+" Define Pattern Highlighting
+highlight Normal guibg=grey90
+highlight Cursor guibg=Green guifg=NONE
+highlight lCursor guibg=Cyan guifg=NONE
+highlight NonText guibg=grey80
+highlight Constant gui=NONE guibg=grey95
+highlight Special gui=NONE guibg=grey95
+
+" Magic for Regular Expressions
+set magic
+
+" Set up buffer variables
+if !exists("buffer")
+  buffer
+endif
+
+" Turn on error debugging
+"set debug=msg
+
+" Disable ; because of testing with tmux
+map ; <nop>
+
+" Move down to the next row, instead of the next column
+nnoremap j gj
+nnoremap k gk
+
+" Set F1 to work like Esc, because typing is hard
+nnoremap <F1> <Esc>
+map! <F1> <Esc>
+
+" Move text with ctrl
+nnoremap <C-j> :m+<CR>==
+nnoremap <C-k> :m-2<CR>==
+nnoremap <C-h> <<
+nnoremap <C-l> >>
+inoremap <C-j> <Esc>:m+<CR>==gi
+inoremap <C-k> <Esc>:m-2<CR>==gi
+inoremap <C-h> <Esc><<`]C
+inoremap <C-l> <Esc>>>`]C
+vnoremap <C-j> :m'>+<CR>gv=gv
+vnoremap <C-k> :m-2<CR>gv=gv
+vnoremap <C-h> <gv
+vnoremap <C-l> >gv
+
+" Make CTRL-g cancel command-mode like in mutt.
+cnoremap <C-g> <C-c>
+
+" Map CTRL-x to comment the selected lines in visual mode
+if !exists("autocmd")
+  autocmd BufNewFile,BufRead .*rc vmap <C-x> :s/^/#\ Kyel:\ \ /g <CR> :noh <CR>
+  autocmd BufNewFile,BufRead *.cfg vmap <C-x> :s/^/#\ Kyel:\ \ /g <CR> :noh <CR>
+  autocmd BufNewFile,BufRead *.inc vmap <C-x> :s/^/#\ Kyel:\ \ /g <CR> :noh <CR>
+  autocmd BufNewFile,BufRead *.dummy vmap <C-x> :s/^/#\ Kyel:\ \ /g <CR> :noh <CR>
+  autocmd BufNewFile,BufRead *.sh vmap <C-x> :s/^/#\ Kyel:\ \ /g <CR> :noh <CR>
+  autocmd BufNewFile,BufRead *.bash vmap <C-x> :s/^/#\ Kyel:\ \ /g <CR> :noh <CR>
+  autocmd BufNewFile,BufRead *.php vmap <C-x> :s/^/\/\/\ Kyel:\ \ /g <CR> :noh <CR>
+  autocmd BufNewFile,BufRead *.ini vmap <C-x> :s/^/;\ Kyel:\ \ /g <CR> :noh <CR>
+  autocmd BufNewFile,BufRead *.conf vmap <C-x> :s/^/#\ Kyel:\ \ /g <CR> :noh <CR>
+  autocmd BufNewFile,BufRead *.cf vmap <C-x> :s/^/#\ Kyel:\ \ /g <CR> :noh <CR>
+  autocmd BufNewFile,BufRead *.erb vmap <C-x> :s/^/#\ Kyel:\ \ /g <CR> :noh <CR>
+  autocmd BufNewFile,BufRead *.py vmap <C-x> :s/^/#\ Kyel:\ \ /g <CR> :noh <CR>
+  autocmd BufNewFile,BufRead *.pp vmap <C-x> :s/^/#\ Kyel:\ \ /g <CR> :noh <CR>
+  autocmd BufNewFile,BufRead *.pl vmap <C-x> :s/^/#\ Kyel:\ \ /g <CR> :noh <CR>
+  autocmd BufNewFile,BufRead *.prf vmap <C-x> :s/^/#\ Kyel:\ \ /g <CR> :noh <CR>
+  autocmd BufNewFile,BufRead *.rb vmap <C-x> :s/^/#\ Kyel:\ \ /g <CR> :noh <CR>
+  autocmd BufNewFile,BufRead *.c vmap <C-x> :s/^/\/\*\ Kyel:\ \ /g <CR> :noh <CR>
+  autocmd BufNewFile,BufRead *.c vmap <C-x> :s/$/\\\*\ Kyel:\ \ /g <CR> :noh <CR>
+
+  " Map CTRL-u to uncomment the selected lines in visual mode
+  autocmd BufNewFile,BufRead .*rc vmap <C-u> :s/^#\ Kyel:\ \ //g <CR> :noh <CR>
+  autocmd BufNewFile,BufRead *.cfg vmap <C-u> :s/^#\ Kyel:\ \ //g <CR> :noh <CR>
+  autocmd BufNewFile,BufRead *.inc vmap <C-u> :s/^#\ Kyel:\ \ //g <CR> :noh <CR>
+  autocmd BufNewFile,BufRead *.dummy vmap <C-u> :s/^#\ Kyel:\ \ //g <CR> :noh <CR>
+  autocmd BufNewFile,BufRead *.sh vmap <C-u> :s/^#\ Kyel:\ \ //g <CR> :noh <CR>
+  autocmd BufNewFile,BufRead *.bash vmap <C-u> :s/^#\ Kyel:\ \ //g <CR> :noh <CR>
+  autocmd BufNewFile,BufRead *.php vmap <C-u> :s/^\/\/\ Kyel:\ \ //g <CR> :noh <CR>
+  autocmd BufNewFile,BufRead *.ini vmap <C-u> :s/^;\ Kyel:\ \ //g <CR> :noh <CR>
+  autocmd BufNewFile,BufRead *.conf vmap <C-u> :s/^#\ Kyel:\ \ //g <CR> :noh <CR>
+  autocmd BufNewFile,BufRead *.cf vmap <C-u> :s/^#\ Kyel:\ \ //g <CR> :noh <CR>
+  autocmd BufNewFile,BufRead *.erb vmap <C-u> :s/^#\ Kyel:\ \ //g <CR> :noh <CR>
+  autocmd BufNewFile,BufRead *.py vmap <C-u> :s/^#\ Kyel:\ \ //g <CR> :noh <CR>
+  autocmd BufNewFile,BufRead *.pp vmap <C-u> :s/^#\ Kyel:\ \ //g <CR> :noh <CR>
+  autocmd BufNewFile,BufRead *.pl vmap <C-u> :s/^#\ Kyel:\ \ //g <CR> :noh <CR>
+  autocmd BufNewFile,BufRead *.prf vmap <C-u> :s/^#\ Kyel:\ \ //g <CR> :noh <CR>
+  autocmd BufNewFile,BufRead *.rb vmap <C-u> :s/^#\ Kyel:\ \ //g <CR> :noh <CR>
+endif
+
+" Allow CTRL-q to be used
+silent !stty -ixon > /dev/null 2>/dev/null
+
+" Map CTRL-q to quote the visually selected lines
+vmap <C-q> :s/^/>\ \ /g <CR> :noh <CR>
+
+" Map CTRL-q to quote from the current line to the end of the block in emails
+map <C-q> ^ma}k:'a,.s/^/>\ \ /g <CR> :noh <CR> <CR>
+
+" Use sudo if opened as non-root by writing with w!!
+cmap w!! w !sudo tee % >/dev/null
+
+" nopaste is cool for coding, not for everythign else
+set paste
+
+"Allow use of line continuation
+if !exists("let")
+  let s:save_cpo = &cpo
+  set cpo&vim
+endif
+
+" reset &cpo back to users setting
+if !exists("let")
+  let &cpo = s:save_cpo
+endif
+
+" Make the search-hilight color readable
+hi Search ctermbg=2 ctermfg=0
+
+" vim 7.1 requires everything be down here before the call for some reason.
+:call SetColors()

@@ -1,0 +1,122 @@
+# .bashrc
+# Source global definitions
+if [ -f /etc/bashrc ]; then
+  . /etc/bashrc
+fi
+
+### better autocomplete
+. /etc/bash_completion
+# moar better autocomplete
+compopt -o bashdefault ls
+# allow tab-complete of symlinks
+complete -r cd
+# autocomplete ignore
+export FIGNORE=".svn:CVS:.git"
+
+# System Information
+HOSTNAME=$(/bin/hostname -s)
+DOMAIN=$(/bin/hostname -d)
+alsi 2> /dev/null
+archey 2> /dev/null
+
+# Stupid mail messages
+MAILCHECK=0
+
+# SVN hates life
+export LC_ALL=C
+
+# User specific aliases and functions
+export PATH=$PATH:/bin:/usr/bin:/sbin:/usr/sbin:/usr/local/bin:/usr/local/sbin:$HOME/scripts:$HOME/scripts/bash
+export EDITOR=vim
+export GREP_COLOR='1;44'
+
+# Don't expand the tilde
+set expand-tilde off
+
+# Aliases
+alias battery='acpi -b'
+alias ls='ls --color=auto'
+alias fucking='sudo '
+alias fuck='sudo !! '
+alias sduo='sudo '
+alias :wq='exit'
+alias puppet-lint='puppet-lint --with-filename --no-80chars-check --no-2sp_soft_tabs-check'
+
+# Bash Colors
+LS_COLORS="di=42;90:ln=target:pi=40;33:so=01;35:do=01;35:bd=40;33;01:cd=40;33;01:or=40;31;01:su=37;41:sg=30;43:tw=30;42:ow=01;42;90:st=37;44:ex=32:fi=37"
+export LS_COLORS
+
+# Prompt Display with color-coded returns
+function _prompt_command() {
+  PS1="`if [ \$? = 0 ]; then echo -n '\[\e[32m\]\u\[\e[34m\]@\h \[\e[36m\]\W\[\e[m\] \[\e[32m\]\$ \[\e[37m\]';else echo -n '\[\e[32m\]\u\[\e[31m\]@\h \[\e[36m\]\W\[\e[m\] \[\e[32m\]\$ \[\e[37m\]';fi`"
+}   
+PROMPT_COMMAND=_prompt_command
+
+# Sudo Auto-Complete
+if [ "$PS1" ]; then
+  complete -cf sudo
+fi
+
+# Remapping Esc to CapsLock and CapsLock to Esc for X
+if xmodmap &> /dev/null; 
+  then
+    xmodmap -e "clear lock"
+    xmodmap -e "keycode 9 = Caps_Lock NoSymbol Caps_Lock"
+    xmodmap -e "keycode 66 = Escape NoSymbol Escape"
+    xmodmap -e "keycode 66 = Escape NoSymbol Escape"
+    xmodmap -e "keycode 135 = Super_L"
+fi
+
+# Ignore duplicate commands in .bash_history
+export HISTCONTROL=ignoreboth
+
+# Set .bash_history size
+export HISTSIZE=5000
+
+# Set .bash_history archive by date
+# Set the .bash_history folder var
+folder=$HOME/.bash_history/
+
+# Remove the .bash_history file if it exists
+if [ -f $HOME/.bash_history ]; then
+  rm -rf $HOME/.bash_history
+fi
+
+# Make sure the .bash_history folder exists
+if [ ! -d "$folder" ]; then
+  mkdir $folder
+fi
+
+# Set Todays date
+date=$(date +%Y-%m-%d)
+
+# Maintain History)
+# Get Last bash file
+last_file=$(ls $HOME/.bash_history/ -1 -r | head -1)
+
+# Copy last_bash's History to today
+if [ ! -e $HOME/.bash_history/bash_history.${date} ]
+  then
+    cp $HOME/.bash_history/${last_file} $HOME/.bash_history/bash_history.${date} 2> /dev/null
+fi
+
+# Set the .bash_history.$date file name
+history_file="bash_history.${date}"
+
+# Set the bash history to the .bash_history.$date file
+HISTFILE=$HOME/.bash_history/$history_file
+
+# Recursively set permissions on .bash_history.$date file
+chmod -R 700 $folder
+
+# Apply custom xterm settings
+[[ -f ~/.Xresources ]] && xrdb ~/.Xresources 2> /dev/null
+
+# Predictable SSH authentication socket location.
+SOCK="/tmp/sdfk023j23-jf"
+if test $SSH_AUTH_SOCK && [ $SSH_AUTH_SOCK != $SOCK ]
+then
+  rm -f $SOCK
+  ln -sf $SSH_AUTH_SOCK $SOCK
+  export SSH_AUTH_SOCK=$SOCK
+fi
