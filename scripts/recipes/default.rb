@@ -29,18 +29,18 @@ cookbook_file "/root/.bashrc" do
 end
 
 # I know, I know. This could be handled much better, but fuckit
-# CaptSpify
-cookbook_file "/home/CaptSpify/.vimrc" do
+# user
+cookbook_file "/home/user/.vimrc" do
   source "vimrc"
-  owner "CaptSpify"
-  group "CaptSpify"
+  owner "user"
+  group "user"
   mode 0700
 end
 
-cookbook_file "/home/CaptSpify/.bashrc" do
+cookbook_file "/home/user/.bashrc" do
   source "bashrc"
-  owner "CaptSpify"
-  group "CaptSpify"
+  owner "user"
+  group "user"
   mode 0700
 end
 
