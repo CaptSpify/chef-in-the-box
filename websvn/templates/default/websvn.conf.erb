@@ -1,0 +1,17 @@
+# Distributed by chef
+
+<VirtualHost *:81>
+  Alias <%= @alias %> <%= @directory %>
+  ServerName websvn.example.com
+
+  <Directory <%= @directory %>>
+    DirectoryIndex <%= @directory_index %>
+    Options +ExecCGI -MultiViews +SymLinksIfOwnerMatch FollowSymLinks +Indexes
+    Order allow,deny
+    Allow from all
+    <IfModule mod_php4.c>
+      php_flag magic_quotes_gpc Off
+      php_flag track_vars On
+    </IfModule>
+  </Directory>
+</VirtualHost>

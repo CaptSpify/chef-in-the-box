@@ -1,0 +1,31 @@
+{
+  "name": "subsonic",
+  "description": "Installs subsonic",
+  "long_description": "Subsonic is a free, web-based media streamer, providing ubiquitous access to your music. Use it to share your music with friends, or to listen to your own music while at work. You can stream to multiple players simultaneously, for instance to one player in your kitchen and another in your living room. ",
+  "maintainer": "Kyel Woodard",
+  "maintainer_email": "CaptSpify@Yahoo.com",
+  "platforms": {
+    "debian": [
+    ]
+  },
+  "dependencies": {
+  },
+  "recommendations": {
+  },
+  "suggestions": {
+  },
+  "conflicting": {
+  },
+  "providing": {
+  },
+  "replacing": {
+  },
+  "attributes": {
+  },
+  "groupings": {
+  },
+  "recipes": {
+    "subsonic": "Installs subsonic"
+  },
+  "version": "0.1.0"
+}

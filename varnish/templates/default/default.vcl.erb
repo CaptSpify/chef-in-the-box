@@ -1,0 +1,273 @@
+// // // Original default
+//backend default {
+  //        .host = "<%= node['varnish']['backend_host'] %>";
+  //        .port = "<%= node['varnish']['backend_port'] %>";
+  //}
+
+backend www2 
+  {
+    .host = "www2.example.com";
+    .port = "80";
+    .probe = 
+      {
+         .url = "/";
+         .interval = 10s;
+         .timeout = 2 s;
+         .window = 10;
+         .threshold = 9;
+      }
+  }
+
+backend www2 
+  {
+    .host = "www2.example.com";
+    .port = "80";
+    .probe = 
+      {
+         .url = "/";
+         .interval = 10s;
+         .timeout = 2 s;
+         .window = 10;
+         .threshold = 9;
+      }
+  }
+
+backend subdomain
+  {
+    .host = "subdomain.example.com";
+    .port = "80";
+    .probe = 
+      {
+         .url = "/login.php";
+         .interval = 10s;
+         .timeout = 2 s;
+         .window = 10;
+         .threshold = 9;
+      }
+  }
+
+backend chef
+  {
+    .host = "chef.example.com";
+    .port = "4001";
+    .probe = 
+      {
+         .url = "/";
+         .interval = 5s;
+         .timeout = 1 s;
+         .window = 5;
+         .threshold = 3;
+      }
+  }
+
+backend nagios
+  {
+    .host = "nagios.example.com";
+    .port = "80";
+    .probe = 
+      {
+         .url = "/";
+         .interval = 5s;
+         .timeout = 1 s;
+         .window = 5;
+         .threshold = 3;
+      }
+  }
+
+director director1 round-robin 
+  {
+    {
+      .backend = www2;
+    }
+
+    {
+      .backend = www2;
+    }
+  }
+
+C{
+    #include <syslog.h>
+}C
+
+acl purge 
+  {
+    "localhost";
+    "192.168.1.0"/24;
+  }
+
+sub vcl_recv 
+  {
+    # allow PURGE from localhost and 192.168.1...
+    if (req.request == "PURGE") 
+      {
+        if (!client.ip ~ purge) 
+          {
+              error 405 "Not allowed.";
+          }
+        return (lookup);
+      }
+
+      /*C{
+          syslog(LOG_INFO, "starting the recv");
+      }C*/
+
+    if (req.restarts == 0) 
+      {
+        /*C{
+            syslog(LOG_INFO, "setting the xforwarded");
+        }C*/
+        if (req.http.x-forwarded-for) 
+          {
+            set req.http.X-Forwarded-For =
+            req.http.X-Forwarded-For ", " client.ip;
+          } else {
+            set req.http.X-Forwarded-For = client.ip;
+          }
+      }
+
+    if (req.request != "GET" &&
+      req.request != "HEAD" &&
+      req.request != "PUT" &&
+      req.request != "POST" &&
+      req.request != "TRACE" &&
+      req.request != "OPTIONS" &&
+      req.request != "DELETE") 
+      {
+        /*C{
+            syslog(LOG_INFO, "no RFC2616? what is this nonsense?");
+        }C*/
+        /* Non-RFC2616 or CONNECT which is weird. */
+        return (pipe);
+      } else {
+        /*C{
+            syslog(LOG_INFO, "Good ol' RFC2616");
+        }C*/
+      }
+
+    if (req.request != "GET" && req.request != "HEAD") 
+      {
+        /* We only deal with GET and HEAD by default */
+       /* C{
+            syslog(LOG_INFO, "Not a GET or a HEAD");
+        }C*/
+        return (lookup);
+      }
+
+    #Trying to pass authorizations right back through
+    #This makes alternative-port apps (subsonic, chef) act funny because it's trying to pass it right on back. Not sure how to handle
+    #if (req.http.Authorization || req.http.Cookie) 
+    #  {
+    #  # Not cacheable by default
+    #  C{
+    #      syslog(LOG_INFO, "Trying to authorize");
+    #  }C
+    #      return (lookup);
+    #} else {
+    #   C{
+    #       syslog(LOG_INFO, "Not looking to authorize");
+    #   }C
+    #} 
+
+  if (req.http.host ~ "^(www.example.com")
+    {
+      set req.backend = director1;
+      /*C{
+          syslog(LOG_INFO, "main-header");
+      }C*/
+    } else if (req.http.host ~ "^subdomain.example.com") {
+      set req.backend = www2;
+      /*C{
+          syslog(LOG_INFO, "subdomain");
+      }C*/
+    } else if (req.http.host ~ "^chef.example.com") {
+      set req.backend = chef;
+      /*C{
+          syslog(LOG_INFO, "chef");
+      }C*/
+    } else if (req.http.host ~ "^nagios.example.com") {
+      set req.backend = nagios;
+      /*C{
+          syslog(LOG_INFO, "nagios");
+      }C*/
+    } else {
+      set req.backend = director1;
+      /*C{
+          syslog(LOG_INFO, "else");
+      }C*/
+    }
+
+    return (lookup);
+  }
+
+sub vcl_hash 
+  {
+   set req.hash += req.url;
+   return (hash);
+  }
+
+sub vcl_miss 
+  {
+    if (req.request == "PURGE") 
+    {
+      error 404 "Not in cache.";
+    }
+    return (pass);
+  }
+
+sub vcl_hit 
+  {
+    if (req.http.Authorization && req.restarts == 0)
+    {
+      set req.request = "HEAD";
+      return (pass);
+    }
+    
+    if (req.request == "PURGE") 
+    {
+      set obj.ttl = 0s;
+      error 200 "Purged.";
+    }
+
+    if (!obj.cacheable) 
+      {
+        return (pass);
+      }
+
+    return (deliver);
+  }
+
+sub vcl_pass 
+  {
+    return (pass);
+  }
+
+sub vcl_fetch 
+  {
+    return (deliver);
+  }
+
+sub vcl_error 
+  {
+     set obj.http.Content-Type = "text/html; charset=utf-8";
+     synthetic 
+     {"
+      <?xml version="1.0" encoding="utf-8"?>
+      <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+      "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+      <html>
+       <head>
+         <title>"} obj.status " " obj.response {"</title>
+       </head>
+       <body>
+         <h1>Error "} obj.status " " obj.response {"</h1>
+         <p>"} obj.response {"</p>
+         <h3>Guru Meditation:</h3>
+         <p>XID: "} req.xid {"</p>
+         <hr>
+         <p>Varnish cache server</p>
+       </body>
+      </html>
+     "};
+
+     return (deliver);
+  }

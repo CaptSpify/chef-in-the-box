@@ -1,0 +1,8 @@
+AuthName "WEBSVN"
+AuthType Basic
+AuthUserFile /etc/apache2/.htaccess
+require valid-user
+<Files "healthcheck.txt">
+  Satisfy Any
+  Allow from all
+</Files>

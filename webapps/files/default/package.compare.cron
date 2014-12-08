@@ -1,0 +1,1 @@
+*/5 * * * * root /usr/bin/package.compare.sh >> /var/log/www-pull.log 2>&1 /var/log/www-pull.log 

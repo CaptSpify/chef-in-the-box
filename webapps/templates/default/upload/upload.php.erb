@@ -1,0 +1,53 @@
+<html>
+  <body>
+
+  <?php
+    if(isset($_FILES["file"]["name"]))
+      {
+        $file = $_FILES["file"]["name"];
+      } else {
+        die("Something went wrong with the file-name!");
+      }
+      
+    if(isset($_FILES['file']['tmp_name']))
+      {
+        $tmp_file = $_FILES['file']['tmp_name'];
+      } else {
+        die("Something went wrong with the file-tmp_name!");
+      }
+
+    if(isset($_POST['time']))
+      {
+        $time = $_POST['time'];
+      } else {
+        die("Something went wrong with the file-time!");
+      }
+
+    $path = $time."/";
+
+    $full_path = $path."/".$file;
+
+    if(file_exists($full_path))
+    {
+      echo "File already exists!<br>";
+    } else {
+      if(move_uploaded_file($tmp_file,$full_path))
+        {
+          $url = "http://temp.example.com/".$time."/".$file; 
+          echo "The file has been saved in ".$time."<br>";
+          echo "Here is the link:<br><br>";
+          echo "<a href=".$url.">".$url."</a>";
+        } else {
+          echo "There was a problem moving the file to ".$path.$file."!<br>";
+          echo "Please try again!";
+        }
+
+      chmod($full_path,0444);
+    }
+  ?>
+  <br>
+  <br>
+  <a href="http://temp.example.com">Return</a>
+
+  </body>
+</html> 

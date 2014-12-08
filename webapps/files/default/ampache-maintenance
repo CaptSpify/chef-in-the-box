@@ -1,0 +1,1 @@
+0 */8 * * * www-data /usr/bin/php /usr/share/ampache/www/bin/catalog_update.inc >> /var/log/ampache/catalog_update.log 2>&1

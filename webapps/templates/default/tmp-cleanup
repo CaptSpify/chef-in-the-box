@@ -1,0 +1,4 @@
+0 * * * * root rm -f /var/www/tmp/hour/* >> /var/log/tmp_rm.log
+0 0 * * * root rm -f /var/www/tmp/day/* >> /var/log/tmp_rm.log
+0 0 * * 0 root rm -f /var/www/tmp/week/* >> /var/log/tmp_rm.log
+0 0 1 * * root rm -f /var/www/tmp/month/* >> /var/log/tmp_rm.log

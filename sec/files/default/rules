@@ -1,0 +1,15 @@
+# LMK when shit goes down
+type=Single
+ptype=RegExp
+pattern=something
+desc=SEC: something happened
+action=pipe '$0' /usr/bin/mail -es '%s' admin@example.com
+
+# LMK when I'm getting hacked
+type=SingleWithThreshold
+ptype=RegExp
+pattern=sshd\[d+]: fatal: Read from socket failed: Connection reset by peer \[preauth]
+desc=SEC: oh noes, hak0rz
+action=pipe '$0' /usr/bin/mail -es 'SEC' admin@example.com
+window=3600
+thresh=2
